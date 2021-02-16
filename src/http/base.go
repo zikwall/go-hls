@@ -2,7 +2,7 @@ package http
 
 import (
 	"context"
-	"log"
+	"github.com/zikwall/go-hls/src/log"
 	"net/http"
 	"time"
 )
@@ -37,7 +37,7 @@ func (h *HandlerProvider) Serve() {
 	http.HandleFunc("/", h.PullHandler)
 
 	if err := h.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Fatal(err)
+		log.Error(err)
 	}
 }
 
@@ -46,8 +46,8 @@ func (h HandlerProvider) Shutdown() {
 	defer cancel()
 
 	if err := h.server.Shutdown(ctx); err != nil {
-		log.Println(err)
+		log.Info(err)
 	}
 
-	log.Println("Graceful shutdown")
+	log.Info("Graceful shutdown")
 }

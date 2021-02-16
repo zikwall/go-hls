@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/zikwall/go-hls/src/http"
-	"log"
+	"github.com/zikwall/go-hls/src/log"
 	"path/filepath"
 )
 
@@ -10,7 +10,7 @@ func main() {
 	absolutePath, err := filepath.Abs("./tmp")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 	httpHandlerProvider := http.HandlerProvider{
@@ -21,9 +21,10 @@ func main() {
 		httpHandlerProvider.Serve()
 	}()
 
+	congratulations()
 	waitSystemNotify()
 
 	httpHandlerProvider.Shutdown()
 
-	log.Println("Stopped")
+	log.Info("Stopped")
 }
