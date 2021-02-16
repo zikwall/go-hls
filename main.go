@@ -3,9 +3,11 @@ package main
 import (
 	"github.com/urfave/cli/v2"
 	"github.com/zikwall/go-hls/src/http"
+	"github.com/zikwall/go-hls/src/io"
 	"github.com/zikwall/go-hls/src/log"
 	"os"
 	"path/filepath"
+	"syscall"
 )
 
 func main() {
@@ -35,8 +37,31 @@ func main() {
 			httpHandlerProvider.Serve()
 		}()
 
+		signal := buildWaitNotifier()
+
+		go func() {
+			reader := io.NewInputReader(
+				func() {
+					log.Info("Close reader")
+
+					// Send a signal to end the application
+					signal <- syscall.SIGINT
+				},
+				func(err error) {
+					log.Warning(err)
+				},
+				func(bytes []byte) {
+					log.Info(string(bytes))
+				},
+			)
+
+			reader.From(io.FromTCP(1339))
+			reader.Listen()
+		}()
+
 		congratulations()
-		waitSystemNotify()
+
+		<-signal
 
 		httpHandlerProvider.Shutdown()
 

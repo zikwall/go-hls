@@ -11,9 +11,9 @@ func congratulations() {
 	log.Info("Congratulations, the HLS server has been successfully launched")
 }
 
-func waitSystemNotify() {
+func buildWaitNotifier() chan os.Signal {
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
 
-	<-sig
+	return sig
 }
