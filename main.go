@@ -19,6 +19,18 @@ func main() {
 				EnvVars: []string{"ROOT_FILE_DIRECTORY"},
 				Value:   "./tmp",
 			},
+			&cli.IntFlag{
+				Name:    "input-type",
+				Usage:   "",
+				EnvVars: []string{"INPUT-TYPE"},
+				Value:   1,
+			},
+			&cli.IntFlag{
+				Name:    "tcp-port",
+				Usage:   "",
+				EnvVars: []string{"TCP_PORT"},
+				Value:   1339,
+			},
 		},
 	}
 
@@ -55,7 +67,15 @@ func main() {
 				},
 			)
 
-			reader.From(io.FromTCP(1339))
+			err := reader.ResolveStreamInput(
+				ctx.Int("input-type"),
+				ctx.Int("tcp-port"),
+			)
+
+			if err != nil {
+				log.Error(err)
+			}
+
 			reader.Listen()
 		}()
 

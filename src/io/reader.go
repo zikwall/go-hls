@@ -2,11 +2,17 @@ package io
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 )
 
 const (
 	readBufferSize = 128
+)
+
+const (
+	InputTypeStdin = iota
+	InputTypeTcp
 )
 
 type InputReader struct {
@@ -27,6 +33,18 @@ func NewInputReader(onClose func(), onError func(err error), onReceive func([]by
 
 func (i *InputReader) From(from io.Reader) {
 	i.r = bufio.NewReader(from)
+}
+
+func (i *InputReader) ResolveStreamInput(input, port int) error {
+	if input == InputTypeStdin {
+		i.From(FromStdin())
+		return nil
+	} else if input == InputTypeTcp {
+		i.From(FromTCP(port))
+		return nil
+	}
+
+	return fmt.Errorf("Unauthorized input type %d", input)
 }
 
 func (i InputReader) Listen() {

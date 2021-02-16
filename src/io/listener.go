@@ -19,7 +19,7 @@ func FromStdin() io.Reader {
 // 		$ nc localhost 1339
 // 	```
 func FromTCP(port ...int) io.Reader {
-	p := 13394
+	p := 1339
 
 	if len(port) > 0 && port[0] > 0 {
 		p = port[0]
