@@ -5,16 +5,18 @@ import (
 	"os"
 )
 
-func GetFile(name string) (*os.File, bool, error) {
-	if _, err := os.Stat(name); err != nil {
+func GetFile(name string) (*os.File, os.FileInfo, bool, error) {
+	info, err := os.Stat(name)
+
+	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, false, err
+			return nil, nil, false, err
 		}
 	}
 
 	file, err := os.Open(name)
 
-	return file, true, err
+	return file, info, true, err
 }
 
 func GetFileContentType(out *os.File) (string, error) {
