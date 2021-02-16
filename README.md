@@ -21,7 +21,7 @@ $ go run . \
 ```shell
 $ docker run -d -p 1338:1338 \
     -e ROOT_FILE_DIRECTORY='<path | default ./tmp>' \
-	-e INPUT_TYPE='<[0, 1] | default 1>' \
-	-e TCP_PORT=<int | default 1339> \
+    -e INPUT_TYPE='<[0, 1] | default 1>' \
+    -e TCP_PORT=<int | default 1339> \
     --name go-hls-example qwx1337/go-hls:latest
 ```
