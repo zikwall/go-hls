@@ -7,7 +7,6 @@ import (
 	"github.com/zikwall/go-hls/src/log"
 	"os"
 	"path/filepath"
-	"syscall"
 )
 
 func main() {
@@ -49,15 +48,14 @@ func main() {
 			httpHandlerProvider.Serve()
 		}()
 
-		signal := buildWaitNotifier()
+		wait, stop := buildWaitNotifier()
 
 		go func() {
 			reader := io.NewInputReader(
 				func() {
 					log.Info("Close reader")
 
-					// Send a signal to end the application
-					signal <- syscall.SIGINT
+					stop()
 				},
 				func(err error) {
 					log.Warning(err)
@@ -80,12 +78,9 @@ func main() {
 		}()
 
 		congratulations()
-
-		<-signal
+		wait()
 
 		httpHandlerProvider.Shutdown()
-
-		log.Info("Stopped")
 
 		return nil
 	}
