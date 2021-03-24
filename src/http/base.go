@@ -49,5 +49,5 @@ func (h HandlerProvider) Shutdown() {
 		log.Info(err)
 	}
 
-	log.Info("Graceful shutdown")
+	log.Info("Graceful shutdown HTTP server")
 }
